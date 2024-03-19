@@ -1,7 +1,9 @@
+package proj;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.io.file;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,19 +16,30 @@ public class login {
         this.pw = pw;
     }
     public boolean attemptLogin(){
-        File csv = new File("database.csv");
-        Scanner read = new Scanner(csv);
+        try{
 
-        while(csv.hasNextLine()){
-            List<String> row = new ArrayList<String>();
-            Scanner rowScanner = new Scanner(read.nextLine());
-            rowScanner.useDelimiter(COMMA_DELIMITER);
-            while (rowScanner.hasNext()) {
-                row.add(rowScanner.next());
+            Scanner read = new Scanner(new File("C:\\Users\\delta\\OneDrive\\Desktop\\College\\EECS Proj\\proj\\logins.csv"));
+    
+            while(read.hasNextLine()){
+                List<String> row = new ArrayList<String>();
+                Scanner rowScanner = new Scanner(read.nextLine());
+                rowScanner.useDelimiter(",");
+                while (rowScanner.hasNext()) {
+                    row.add(rowScanner.next());
+                }
+                if(row.contains(user) && row.contains(pw)){
+                    rowScanner.close();
+                    return true;
+                }
+                if(!rowScanner.hasNext()){
+                    rowScanner.close();
+                }
             }
-            if(row.contains(user) && row.contains(pw)){
-                return true;
-            }
+            
+            read.close();
+
+        } catch(FileNotFoundException e){
+            e.printStackTrace();
         }
         return false;
     }
